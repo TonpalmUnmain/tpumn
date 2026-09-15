@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>✨ TonpalmUnmain ✨</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --hue: 260;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+    font-family: 'Trebuchet MS', 'Comic Sans MS', cursive, sans-serif;
+    background: linear-gradient(120deg, #0f0c29, #302b63, #24243e);
+    background-size: 400% 400%;
+    animation: bgShift 12s ease infinite;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><text y="18" font-size="18">✨</text></svg>'), auto;
+  }
+
+  @keyframes bgShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Sparkle canvas overlay */
+  #sparkleCanvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* Floating unnecessary shapes */
+  .floaty {
+    position: fixed;
+    border-radius: 50%;
+    opacity: 0.35;
+    filter: blur(1px);
+    animation: floatAround linear infinite;
+    z-index: 0;
+  }
+
+  @keyframes floatAround {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); }
+    25% { transform: translateY(-40px) translateX(30px) rotate(90deg); }
+    50% { transform: translateY(0) translateX(60px) rotate(180deg); }
+    75% { transform: translateY(40px) translateX(30px) rotate(270deg); }
+    100% { transform: translateY(0) translateX(0) rotate(360deg); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .badge {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.25);
+    backdrop-filter: blur(6px);
+    padding: 6px 18px;
+    border-radius: 999px;
+    color: #ffd6ff;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    animation: pulseGlow 2.5s ease-in-out infinite;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 5px rgba(255,214,255,0.3); }
+    50% { box-shadow: 0 0 25px rgba(255,214,255,0.9); }
+  }
+
+  h1 {
+    font-size: clamp(3rem, 12vw, 9rem);
+    margin: 0;
+    font-weight: 900;
+    letter-spacing: -2px;
+    background: linear-gradient(90deg, #ff6ec4, #7873f5, #4adede, #ff6ec4);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradientMove 4s ease infinite, wobble 3s ease-in-out infinite, glitch 8s infinite;
+    text-shadow: 0 0 40px rgba(120, 115, 245, 0.4);
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease;
+  }
+
+  h1:hover {
+    transform: scale(1.08) rotate(-1deg);
+  }
+
+  h1:active {
+    transform: scale(0.92) rotate(2deg);
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes wobble {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-1.5deg); }
+    75% { transform: rotate(1.5deg); }
+  }
+
+  @keyframes glitch {
+    0%, 96%, 100% { filter: none; }
+    97% { filter: hue-rotate(90deg) skewX(3deg); }
+    98% { filter: hue-rotate(-90deg) skewX(-3deg); }
+    99% { filter: none; }
+  }
+
+  .subtitle {
+    margin-top: 18px;
+    font-size: 1rem;
+    color: #cfc9ff;
+    opacity: 0.8;
+    letter-spacing: 1px;
+  }
+
+  .subtitle::after {
+    content: '▋';
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  .divider {
+    width: 220px;
+    height: 3px;
+    margin: 36px 0;
+    background: linear-gradient(90deg, transparent, #ff6ec4, #4adede, transparent);
+    background-size: 200% auto;
+    animation: gradientMove 3s linear infinite;
+    border-radius: 3px;
+  }
+
+  /* Contact card - needlessly elaborate */
+  .contact-card {
+    position: relative;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 32px 44px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4), inset 0 0 30px rgba(255,255,255,0.03);
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+  }
+
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 24px;
+    padding: 2px;
+    background: linear-gradient(120deg, #ff6ec4, #7873f5, #4adede, #ff6ec4);
+    background-size: 300% 300%;
+    animation: gradientMove 5s linear infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: -1;
+  }
+
+  .contact-card:hover {
+    transform: perspective(600px) rotateX(3deg) rotateY(-3deg) scale(1.02);
+  }
+
+  .contact-title {
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #9d97ff;
+    margin-bottom: 18px;
+  }
+
+  .contact-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    justify-content: center;
+    font-size: 1.15rem;
+    color: #fff;
+    margin: 14px 0;
+    padding: 10px 18px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.04);
+    transition: all 0.25s ease;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .contact-row:hover {
+    background: rgba(255,255,255,0.12);
+    transform: translateX(6px);
+    box-shadow: 0 0 20px rgba(120,115,245,0.4);
+  }
+
+  .icon-orb {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: conic-gradient(from 0deg, #ff6ec4, #7873f5, #4adede, #ff6ec4);
+    animation: spin 4s linear infinite;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin {
+    100% { transform: rotate(360deg); }
+  }
+
+  .copy-hint {
+    font-size: 0.65rem;
+    color: #a09aff;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    position: absolute;
+    right: -10px;
+    top: -8px;
+    background: #2d2a5c;
+    padding: 2px 8px;
+    border-radius: 8px;
+  }
+
+  .contact-row:hover .copy-hint {
+    opacity: 1;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: linear-gradient(90deg, #ff6ec4, #7873f5);
+    color: white;
+    padding: 12px 26px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.35s ease;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Utterly unnecessary stats footer */
+  .stats-bar {
+    margin-top: 44px;
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: #8b85c9;
+    letter-spacing: 1px;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .stat-value {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .confetti-btn {
+    margin-top: 40px;
+    padding: 14px 34px;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: white;
+    background: linear-gradient(90deg, #ff6ec4, #7873f5, #4adede);
+    background-size: 200% auto;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(120,115,245,0.5);
+    transition: all 0.25s ease;
+  }
+
+  .confetti-btn:hover {
+    background-position: right center;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 14px 35px rgba(120,115,245,0.7);
+  }
+
+  .confetti-btn:active {
+    transform: translateY(0) scale(0.96);
+  }
+
+  footer {
+    position: fixed;
+    bottom: 8px;
+    width: 100%;
+    text-align: center;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 2px;
+    z-index: 1;
+  }
+
+  /* audio-reactive-looking (fake) bars, purely decorative */
+  .fake-eq {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    height: 24px;
+    margin: 20px auto 0;
+    justify-content: center;
+  }
+  .fake-eq span {
+    width: 4px;
+    background: linear-gradient(180deg, #4adede, #7873f5);
+    border-radius: 2px;
+    animation: eq 1s ease-in-out infinite;
+  }
+  .fake-eq span:nth-child(1){ animation-delay: 0s; }
+  .fake-eq span:nth-child(2){ animation-delay: 0.15s; }
+  .fake-eq span:nth-child(3){ animation-delay: 0.3s; }
+  .fake-eq span:nth-child(4){ animation-delay: 0.45s; }
+  .fake-eq span:nth-child(5){ animation-delay: 0.6s; }
+  @keyframes eq {
+    0%, 100% { height: 4px; }
+    50% { height: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="sparkleCanvas"></canvas>
+
+<div class="container">
+  <div class="badge">made by me and absolutely not claude</div>
+
+  <h1 id="titleText" title="dont fucking click me">TonpalmUnmain</h1>
+  <div class="subtitle">wow</div>
+
+  <div class="divider"></div>
+
+  <div class="contact-card">
+    <div class="contact-title">go away</div>
+
+    <div class="contact-row" data-copy="+66 832470928">
+      <div class="icon-orb">📞</div>
+      <span>+66 832470928</span>
+      <span class="copy-hint">go fuck yourself</span>
+    </div>
+
+    <div class="contact-row" data-copy="warat.tsw@gmail.com">
+      <div class="icon-orb">✉️</div>
+      <span>warat.tsw@gmail.com</span>
+      <span class="copy-hint">go fuck yourself</span>
+    </div>
+  </div>
+
+  <button class="confetti-btn" onclick="launchConfetti()">no</button>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-value" id="visitCounter">0000001</div>SITE VISITS (TOTALLY REAL)</div>
+    <div class="stat"><div class="stat-value" id="uptimeClock">00:00:00</div>UPTIME</div>
+    <div class="stat"><div class="stat-value">100%</div UNNECESSARY-NESS</div>
+    <div class="stat"><div class="stat-value" id="clickCount">0</div>CLICKS ON TITLE</div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied to clipboard!</div>
+
+<footer>hi</footer>
+
+<script>
+  // ----- floating background blobs -----
+  const colors = ['#ff6ec4', '#7873f5', '#4adede', '#ffd6ff'];
+  for (let i = 0; i < 14; i++) {
+    const el = document.createElement('div');
+    el.className = 'floaty';
+    const size = 40 + Math.random() * 120;
+    el.style.width = size + 'px';
+    el.style.height = size + 'px';
+    el.style.top = Math.random() * 100 + 'vh';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.animationDuration = (10 + Math.random() * 20) + 's';
+    document.body.appendChild(el);
+  }
+
+  // ----- sparkle cursor trail -----
+  const canvas = document.getElementById('sparkleCanvas');
+  const ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let particles = [];
+  window.addEventListener('mousemove', (e) => {
+    for (let i = 0; i < 2; i++) {
+      particles.push({
+        x: e.clientX, y: e.clientY,
+        vx: (Math.random() - 0.5) * 2,
+        vy: (Math.random() - 0.5) * 2 - 0.5,
+        life: 40,
+        hue: Math.random() * 360
+      });
+    }
+  });
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.life--;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 100%, 75%, ${p.life / 40})`;
+      ctx.fill();
+    });
+    particles = particles.filter(p => p.life > 0);
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  // ----- fake visit counter that ticks up dramatically -----
+  let visits = Math.floor(Math.random() * 900000) + 100000;
+  document.getElementById('visitCounter').textContent = String(visits).padStart(7, '0');
+  setInterval(() => {
+    visits += Math.floor(Math.random() * 3);
+    document.getElementById('visitCounter').textContent = String(visits).padStart(7, '0');
+  }, 1500);
+
+  // ----- uptime clock, starts at page load -----
+  const startTime = Date.now();
+  setInterval(() => {
+    const diff = Math.floor((Date.now() - startTime) / 1000);
+    const h = String(Math.floor(diff / 3600)).padStart(2, '0');
+    const m = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+    const s = String(diff % 60).padStart(2, '0');
+    document.getElementById('uptimeClock').textContent = `${h}:${m}:${s}`;
+  }, 1000);
+
+  // ----- title click counter + tiny screen shake -----
+  let clicks = 0;
+  document.getElementById('titleText').addEventListener('click', () => {
+    clicks++;
+    document.getElementById('clickCount').textContent = clicks;
+    document.body.style.transition = 'transform 0.05s';
+    document.body.style.transform = `translate(${(Math.random()-0.5)*10}px, ${(Math.random()-0.5)*10}px)`;
+    setTimeout(() => { document.body.style.transform = 'none'; }, 80);
+    if (clicks === 10) showToast('okay you really like clicking this 🤨');
+    if (clicks === 25) showToast('25 clicks. impressive dedication.');
+  });
+
+  // ----- copy to clipboard -----
+  document.querySelectorAll('.contact-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const text = row.getAttribute('data-copy');
+      navigator.clipboard?.writeText(text).catch(() => {});
+      showToast(`Copied "${text}" ✔`);
+    });
+  });
+
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  // ----- confetti button, entirely unnecessary -----
+  function launchConfetti() {
+    const emojis = ['✨','🎉','💫','🌟','💜','🩵'];
+    for (let i = 0; i < 60; i++) {
+      const span = document.createElement('span');
+      span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      span.style.position = 'fixed';
+      span.style.left = Math.random() * 100 + 'vw';
+      span.style.top = '-40px';
+      span.style.fontSize = (14 + Math.random() * 20) + 'px';
+      span.style.zIndex = 1001;
+      span.style.pointerEvents = 'none';
+      span.style.transition = `transform ${2 + Math.random() * 2}s ease-in, opacity ${2 + Math.random()*2}s ease-in`;
+      document.body.appendChild(span);
+      requestAnimationFrame(() => {
+        span.style.transform = `translateY(${window.innerHeight + 80}px) rotate(${Math.random()*720 - 360}deg)`;
+        span.style.opacity = '0';
+      });
+      setTimeout(() => span.remove(), 4200);
+    }
+    showToast('confetti launched, for no reason 🎊');
+  }
+
+  // ----- secret konami-esque easter egg: type "hi" -----
+  let buffer = '';
+  window.addEventListener('keydown', (e) => {
+    buffer = (buffer + e.key).slice(-2).toLowerCase();
+    if (buffer === 'hi') {
+      showToast('hi to you too! 👋');
+      document.documentElement.style.filter = 'invert(1) hue-rotate(180deg)';
+      setTimeout(() => { document.documentElement.style.filter = 'none'; }, 900);
+    }
+  });
+</script>
+
+</body>
+</html>
